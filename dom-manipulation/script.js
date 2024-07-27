@@ -5,34 +5,6 @@ addEventListener(
                 category: "Innovation",
                 text: "Innovation distinguishes between a leader and a follower. – Steve Jobs"
             },
-            {
-                category: "Technology",
-                text: "It has become appallingly obvious that our technology has exceeded our humanity. – Albert Einstein"
-            },
-            {
-                category: "Leadership",
-                text: "The function of leadership is to produce more leaders, not more followers. – Ralph Nader"
-            },
-            {
-                category: "Education",
-                text: "Education is the most powerful weapon which you can use to change the world. – Nelson Mandela"
-            },
-            {
-                category: "Motivation",
-                text: "The only way to do great work is to love what you do. – Steve Jobs"
-            },
-            {
-                category: "Success",
-                text: "Success is not the key to happiness. Happiness is the key to success. If you love what you are doing, you will be successful. – Albert Schweitzer"
-            },
-            {
-                category: "Creativity",
-                text: "Creativity is intelligence having fun. – Albert Einstein"
-            },
-            {
-                category: "Future",
-                text: "The best way to predict the future is to invent it. – Alan Kay"
-            }
         ];
         function showRandomQuote() {
             const newQuoteButton = document.getElementById("newQuote");
@@ -55,6 +27,8 @@ addEventListener(
                         category: newQuoteCategory,
                         text: newQuoteText
                     });
+                    localStorage.setItem("quoteArray", JSON.stringify(quoteArray));
+                    quoteArray = JSON.parse(localStorage.getItem("quoteArray")) || [];
                     document.getElementById("newQuoteCategory").value = '';
                     document.getElementById("newQuoteText").value = '';
                     alert('added the quote successfully')
@@ -66,7 +40,42 @@ addEventListener(
             })
 
         }
+        function loadQuoteArray() {
+            if (localStorage.getItem("quoteArray")) {
+                quoteArray = JSON.parse(localStorage.getItem("quoteArray"));
+            }
+        }
+        const exportButton = document.getElementById("exportButton");
+        exportButton.addEventListener('click', function () {
+            const JSONArray = JSON.stringify(quoteArray);
+            const blob = new Blob([JSONArray], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'quote.json'
+            a.click();
+            URL.revokeObjectURL(url);
 
+        })
+
+        const importJSON = document.getElementById("importFile");
+        importJSON.addEventListener('change',
+            function importFromJsonFile(event) {
+                console.log("hi")
+
+                const fileReader = new FileReader();
+                fileReader.onload = function (event) {
+                    const importedQuotes = JSON.parse(event.target.result);
+                    quoteArray.push(...importedQuotes);
+                    localStorage.setItem("quoteArray", JSON.stringify(quoteArray));
+                    alert('Quotes imported successfully!');
+                };
+
+                fileReader.readAsText(event.target.files[0]);
+            }
+        )
+
+        loadQuoteArray();
         showRandomQuote();
         createAddQuoteForm();
     }
