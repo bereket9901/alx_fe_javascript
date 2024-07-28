@@ -6,7 +6,47 @@ document.addEventListener('DOMContentLoaded', function () {
       },
     ];
     const categoryFilter = document.getElementById("categoryFilter");
-
+    async function fetchQuotesFromServer() {
+        try {
+          const response = await fetch('https://jsonplaceholder.typicode.com/posts');
+          const data = await response.json();
+          return data.map(item => ({ category: "Sample", text: item.title }));
+        } catch (error) {
+          console.error("Error fetching data from server:", error);
+          return [];
+        }
+      }
+    
+      async function syncQuotesWithServer() {
+        const serverQuotes = await fetchQuotesFromServer();
+        const localQuotes = JSON.parse(localStorage.getItem("quoteArray")) || [];
+        const mergedQuotes = mergeQuotes(serverQuotes, localQuotes);
+    
+        localStorage.setItem("quoteArray", JSON.stringify(mergedQuotes));
+        quoteArray = mergedQuotes;
+        loadOptions();
+        displayQuotes(quoteArray);
+        showNotification("Quotes synced with server");
+      }
+    
+      function mergeQuotes(serverQuotes, localQuotes) {
+        const merged = [...localQuotes];
+        serverQuotes.forEach(serverQuote => {
+          if (!localQuotes.some(localQuote => localQuote.text === serverQuote.text)) {
+            merged.push(serverQuote);
+          }
+        });
+        return merged;
+      }
+    
+      function showNotification(message) {
+        const notification = document.getElementById("notification");
+        notification.textContent = message;
+        notification.style.display = "block";
+        setTimeout(() => {
+          notification.style.display = "none";
+        }, 3000);
+      }    
     function showRandomQuote() {
       const newQuoteButton = document.getElementById("newQuote");
       newQuoteButton.addEventListener('click', function () {
