@@ -48,7 +48,7 @@ document.addEventListener('DOMContentLoaded', function () {
         quoteArray = mergedQuotes;
         loadOptions();
         displayQuotes(quoteArray);
-        showNotification();
+        showNotification("Quotes synced with server!");
     }
 
     function mergeQuotes(serverQuotes, localQuotes) {
@@ -61,9 +61,9 @@ document.addEventListener('DOMContentLoaded', function () {
         return merged;
     }
 
-    function showNotification() {
+    function showNotification(message) {
         const notification = document.getElementById("notification");
-        notification.textContent =" Quotes synced with server";
+        notification.textContent = message;
         notification.style.display = "block";
         setTimeout(() => {
             notification.style.display = "none";
