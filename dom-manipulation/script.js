@@ -89,7 +89,7 @@ document.addEventListener('DOMContentLoaded', function () {
       });
     }
 
-    categoryFilter.addEventListener('change', function () {
+    categoryFilter.addEventListener('change', function filterQuotes() {
       const selectedCategory = categoryFilter.value;
       const filteredQuotes = selectedCategory === "all"
         ? quoteArray
