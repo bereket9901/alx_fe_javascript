@@ -49,7 +49,7 @@ document.addEventListener('DOMContentLoaded', function () {
     function loadQuoteArray() {
       if (localStorage.getItem("quoteArray")) {
         quoteArray = JSON.parse(localStorage.getItem("quoteArray"));
-        loadOptions();
+        populateCategories();
       }
     }
 
@@ -78,7 +78,7 @@ document.addEventListener('DOMContentLoaded', function () {
       fileReader.readAsText(event.target.files[0]);
     });
 
-    function loadOptions() {
+    function populateCategories() {
       const categories = [...new Set(quoteArray.map(quote => quote.category))];
       categoryFilter.innerHTML = '<option value="all">All Categories</option>';
       categories.forEach(category => {
@@ -110,5 +110,5 @@ document.addEventListener('DOMContentLoaded', function () {
     loadQuoteArray();
     showRandomQuote();
     createAddQuoteForm();
-    loadOptions();
+    populateCategories();
   });
